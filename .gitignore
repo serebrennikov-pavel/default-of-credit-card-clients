@@ -187,3 +187,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 /.gigacode/
+/data/processed/dataset.csv
+/models/feature_columns.csv
+/models/model_v1.joblib
+/models/model_v2.joblib

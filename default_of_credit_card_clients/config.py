@@ -1,31 +1,35 @@
+"""
+Центральный модуль конфигурации: все пути и переменные окружения проекта.
+Импортируйте константы отсюда вместо хардкода путей в коде.
+"""
 from pathlib import Path
 
 from dotenv import load_dotenv
 from loguru import logger
 
-# Load environment variables from .env file if it exists
+# Загружаем переменные окружения из .env (если файл существует)
 load_dotenv()
 
-# Paths
+# Корень проекта — два уровня вверх от этого файла
 PROJ_ROOT = Path(__file__).resolve().parents[1]
-logger.info(f"PROJ_ROOT path is: {PROJ_ROOT}")
+logger.info(f"Корень проекта: {PROJ_ROOT}")
 
-DATA_DIR = PROJ_ROOT / "data"
-RAW_DATA_DIR = DATA_DIR / "raw"
-INTERIM_DATA_DIR = DATA_DIR / "interim"
-PROCESSED_DATA_DIR = DATA_DIR / "processed"
-EXTERNAL_DATA_DIR = DATA_DIR / "external"
+# ── Директории данных ─────────────────────────────────────────────────────────
+DATA_DIR          = PROJ_ROOT / "data"
+RAW_DATA_DIR      = DATA_DIR / "raw"        # исходные данные (неизменяемые)
+INTERIM_DATA_DIR  = DATA_DIR / "interim"    # промежуточные преобразования
+PROCESSED_DATA_DIR = DATA_DIR / "processed" # финальные данные для моделирования
+EXTERNAL_DATA_DIR = DATA_DIR / "external"   # данные из внешних источников
 
-MODELS_DIR = PROJ_ROOT / "models"
-
+# ── Директории артефактов ─────────────────────────────────────────────────────
+MODELS_DIR  = PROJ_ROOT / "models"          # обученные модели (.joblib, .pkl)
 REPORTS_DIR = PROJ_ROOT / "reports"
-FIGURES_DIR = REPORTS_DIR / "figures"
+FIGURES_DIR = REPORTS_DIR / "figures"       # графики и визуализации
 
-# If tqdm is installed, configure loguru with tqdm.write
+# ── Совместимость loguru с tqdm (прогресс-бары) ───────────────────────────────
 # https://github.com/Delgan/loguru/issues/135
 try:
     from tqdm import tqdm
-
     logger.remove(0)
     logger.add(lambda msg: tqdm.write(msg, end=""), colorize=True)
 except ModuleNotFoundError:
